@@ -17,7 +17,7 @@ public class Increment extends AbstractRandomValue<Integer> {
     public Increment(String mark, int step) {
         super(mark);
         this.current = 1;
-        this.step = 1;
+        this.step = step;
     }
 
     @Override
