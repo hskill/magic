@@ -1,6 +1,5 @@
 package info.ideatower.magic.random.area;
 
-import com.google.common.collect.Lists;
 import info.ideatower.magic.util.FileLoader;
 import info.ideatower.magic.random.value.Picker;
 
@@ -11,9 +10,9 @@ import info.ideatower.magic.random.value.Picker;
  *
  * TODO 地址文件需要补充
  */
-public class Address extends Picker {
+public class Address extends Picker<String> {
 
     public Address(String mark) {
-        super(mark, Lists.newArrayList(FileLoader.loadResource("area/address.txt")));
+        super(mark, FileLoader.loadResource("area/address.txt"));
     }
 }

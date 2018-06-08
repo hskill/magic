@@ -1,11 +1,11 @@
 package info.ideatower.magic.random.area;
 
-import info.ideatower.magic.random.AbstractRandomValue;
+import info.ideatower.magic.random.value.Picker;
+import info.ideatower.magic.util.FileLoader;
 
-public class Province extends AbstractRandomValue<String> {
+public class Province extends Picker<String> {
 
-    @Override
-    public String next() {
-        return null;
+    public Province(String mark) {
+        super(mark, FileLoader.loadResource("area/provinces.txt"));
     }
 }

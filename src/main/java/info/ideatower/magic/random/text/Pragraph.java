@@ -1,9 +1,15 @@
 package info.ideatower.magic.random.text;
 
-import info.ideatower.magic.random.value.PickerFromFile;
 
-public class Pragraph extends PickerFromFile {
+import info.ideatower.magic.random.value.Picker;
+import info.ideatower.magic.util.FileLoader;
+
+/**
+ * 段落文本
+ */
+public class Pragraph extends Picker<String> {
+
     public Pragraph(String mark) {
-        super(mark, "text/pragraph.txt");
+        super(mark, FileLoader.loadResource("text/pragraphs.txt"));
     }
 }

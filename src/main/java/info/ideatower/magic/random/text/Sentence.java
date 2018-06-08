@@ -1,13 +1,15 @@
 package info.ideatower.magic.random.text;
 
-import info.ideatower.magic.random.value.PickerFromFile;
+
+import info.ideatower.magic.random.value.Picker;
+import info.ideatower.magic.util.FileLoader;
 
 /**
  * 句子生成
  */
-public class Sentence extends PickerFromFile {
+public class Sentence extends Picker<String> {
 
     public Sentence(String mark) {
-        super(mark, "text/sentences.txt");
+        super(mark, FileLoader.loadResource("text/sentences.txt"));
     }
 }
