@@ -11,7 +11,6 @@ public class Age extends Int {
         super(mark, 16, 60);
     }
 
-
     public Age(String mark, int min) {
         super(mark, min, 60);
     }
