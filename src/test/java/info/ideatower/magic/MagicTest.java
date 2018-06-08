@@ -21,20 +21,20 @@ public class MagicTest {
         )
         .as()
         .size(10)
-        .writer("${id?c} - ${name} - ${age}\n", new OutputStreamWriter(System.out));
+        .str("${id?c} - ${name} - ${age}\n", new OutputStreamWriter(System.out));
 
 
-        List<Person> personList = Magic.schame(
-            new Id("id"),
-            Magic.getSchema("xxx").getProduced("name", "name")
-        )
-        .as()
-        .size(10)
-        .obj(Person.class);
-
-        for (Person p : personList) {
-            System.out.println(p);
-        }
+//        List<Person> personList = Magic.schame(
+//            new Id("id"),
+//            Magic.getSchema("xxx").getProduced("name", "name")
+//        )
+//        .as()
+//        .size(10)
+//        .obj(Person.class);
+//
+//        for (Person p : personList) {
+//            System.out.println(p);
+//        }
     }
 
     @Data

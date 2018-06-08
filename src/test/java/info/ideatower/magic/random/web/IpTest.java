@@ -13,7 +13,7 @@ public class IpTest {
         Magic.schame(ip)
                 .as()
                 .size(10)
-                .writer("ip: ${ip}\n", new OutputStreamWriter(System.out));
+                .str("ip: ${ip}\n", new OutputStreamWriter(System.out));
     }
 
 }
