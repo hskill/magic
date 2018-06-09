@@ -3,10 +3,11 @@ package info.ideatower.magic;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import info.ideatower.magic.random.AbstractRandomValue;
 import info.ideatower.magic.random.value.Picker;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 总体随机数据域

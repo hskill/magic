@@ -10,6 +10,7 @@ import info.ideatower.magic.random.value.Picker;
 public class UserAgent extends Picker<String> {
 
     public UserAgent(String mark) {
-        super(mark, "web/useragents.txt");
+        super(mark);
+        this.values("web/useragents.txt");
     }
 }

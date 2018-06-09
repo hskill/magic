@@ -4,12 +4,12 @@ import info.ideatower.magic.random.value.Picker;
 import info.ideatower.magic.util.FileLoader;
 
 /**
- * 中文词语
+ * 英语单词
  */
-public class Word extends Picker<String> {
+public class EnglishWord extends Picker<String> {
 
-    public Word(String mark) {
+    public EnglishWord(String mark) {
         super(mark);
-        this.values(FileLoader.loadResource("text/words.txt"));
+        this.values(FileLoader.loadResource("text/englishwords.txt"));
     }
 }

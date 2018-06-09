@@ -8,14 +8,7 @@ import info.ideatower.magic.random.value.Int;
 public class Age extends Int {
 
     public Age(String mark) {
-        super(mark, 16, 60);
-    }
-
-    public Age(String mark, int min) {
-        super(mark, min, 60);
-    }
-
-    public Age(String mark, int min, int max) {
-        super(mark, min, max);
+        super(mark);
+        this.between(16, 68);
     }
 }

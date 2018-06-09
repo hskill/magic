@@ -9,7 +9,7 @@ public class Ip extends AbstractRandomValue<String> {
 
     public Ip(String mark) {
         super(mark);
-        this.integer = new Int(mark, 0 , 255);
+        this.integer = new Int(mark).between( 0 , 255);
     }
 
     @Override

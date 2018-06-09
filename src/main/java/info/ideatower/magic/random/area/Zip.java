@@ -11,7 +11,7 @@ import info.ideatower.magic.util.FileLoader;
 public class Zip extends Picker<String> {
 
     public Zip(String mark) {
-        // TODO
-        super(mark, FileLoader.loadResource("area/zips.txt"));
+        super(mark);
+        this.values(FileLoader.loadResource("area/zips.txt"));
     }
 }

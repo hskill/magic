@@ -1,8 +1,8 @@
 package info.ideatower.magic.random.person;
 
 import com.google.common.collect.Lists;
-import info.ideatower.magic.util.FileLoader;
 import info.ideatower.magic.random.value.Picker;
+import info.ideatower.magic.util.FileLoader;
 
 /**
  * 姓名
@@ -12,6 +12,7 @@ import info.ideatower.magic.random.value.Picker;
 public class Name extends Picker {
 
     public Name(String mark) {
-        super(mark, Lists.newArrayList(FileLoader.loadResource("person/names.txt")));
+        super(mark);
+        this.values(Lists.newArrayList(FileLoader.loadResource("person/names.txt")));
     }
 }

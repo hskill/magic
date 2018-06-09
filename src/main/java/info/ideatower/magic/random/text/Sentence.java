@@ -10,6 +10,7 @@ import info.ideatower.magic.util.FileLoader;
 public class Sentence extends Picker<String> {
 
     public Sentence(String mark) {
-        super(mark, FileLoader.loadResource("text/sentences.txt"));
+        super(mark);
+        this.values(FileLoader.loadResource("text/sentences.txt"));
     }
 }

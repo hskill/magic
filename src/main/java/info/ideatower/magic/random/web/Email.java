@@ -1,7 +1,7 @@
 package info.ideatower.magic.random.web;
 
 import info.ideatower.magic.random.AbstractRandomValue;
-import info.ideatower.magic.random.text.Str;
+import info.ideatower.magic.random.text.EnglishWord;
 
 import java.text.MessageFormat;
 
@@ -10,16 +10,16 @@ import java.text.MessageFormat;
  */
 public class Email extends AbstractRandomValue<String> {
 
-    private final Str name;
+    private final EnglishWord name;
     private final Domain domain;
 
     public Email(String mark) {
         super(mark);
-        this.name = new Str(mark, 6, 10);
+        this.name = new EnglishWord(mark);
         this.domain = new Domain(mark);
     }
     @Override
     public String next() {
-        return MessageFormat.format("{0}@{1}", name.next().toLowerCase(), domain.next());
+        return MessageFormat.format("{0}@{1}", name.next(), domain.next());
     }
 }

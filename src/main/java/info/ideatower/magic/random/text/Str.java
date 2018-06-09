@@ -8,53 +8,44 @@ import org.apache.commons.lang3.RandomStringUtils;
  */
 public class Str extends AbstractRandomValue<String> {
 
-    public static final String STRS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    public static final String STRS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
 
     private String pool = STRS;
     private int count;
-    private int min;
-    private int max;
+    private int min = 10;
+    private int max = 20;
 
     public Str(String mark) {
-        this(mark, STRS, 5);
+        super(mark);
     }
 
-    public Str(String mark, String pool, int count) {
-        super(mark);
-        this.pool = pool;
+    public Str count(int count) {
         this.count = count;
+        return this;
     }
 
-    public Str(String mark, String pool, int min, int max) {
-        super(mark);
-        this.pool = pool;
+    public Str min(int min) {
         this.min = min;
-        this.max = max;
+        return this;
     }
 
-    public Str(String mark, String pool) {
-        this(mark, 5);
+    public Str max(int max) {
+        this.max = max;
+        return this;
+    }
+
+    public Str pool(String pool) {
         this.pool = pool;
-    }
-
-    public Str(String mark, int count) {
-        super(mark);
-        this.count = count;
-    }
-
-    public Str(String mark, int min, int max) {
-        super(mark);
-        this.min = min;
-        this.max = max;
+        return this;
     }
 
     @Override
     public String next() {
         if (this.count > 0) {
-            return RandomStringUtils.random(this.count, STRS);
+            return RandomStringUtils.random(this.count, this.pool);
         }
         else {
-            return RandomStringUtils.random(this.min + getRandom().nextInt(this.max - this.min), STRS);
+            return RandomStringUtils.random(this.min + getRandom().nextInt(this.max - this.min), pool);
         }
 
     }

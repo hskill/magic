@@ -13,11 +13,11 @@ public class RgbColor extends AbstractRandomValue<String> {
     public RgbColor(String mark) {
         super(mark);
         // 因为Int使用的是java.lang.Random类对象的next(int bounds) 该方法会排除掉传入的max值，所以需要+1
-        this.integer = new Int(mark, 0, 255 + 1);
+        this.integer = new Int(mark).between(0, 255 + 1);
     }
 
     @Override
     public String next() {
-        return MessageFormat.format("rgb({0}, {1}, {2})", Repeater.repeat(this.integer, 3));
+        return MessageFormat.format("rgb({0}, {1}, {2})", Repeater.objs(this.integer, 3));
     }
 }

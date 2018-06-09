@@ -6,6 +6,7 @@ import info.ideatower.magic.util.FileLoader;
 public class Province extends Picker<String> {
 
     public Province(String mark) {
-        super(mark, FileLoader.loadResource("area/provinces.txt"));
+        super(mark);
+        this.values(FileLoader.loadResource("area/provinces.txt"));
     }
 }

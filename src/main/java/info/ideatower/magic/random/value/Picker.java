@@ -1,6 +1,7 @@
 package info.ideatower.magic.random.value;
 
 import com.google.common.collect.Lists;
+import info.ideatower.magic.Randomable;
 import info.ideatower.magic.random.AbstractRandomValue;
 import lombok.Data;
 
@@ -9,29 +10,31 @@ import java.util.List;
 @Data
 public class Picker<T> extends AbstractRandomValue<T> {
 
-    private List<T> values;
+    private List<T> values = Lists.newArrayList();
 
     public Picker(String mark) {
-        this(mark, Lists.newArrayList());
+        super(mark);
     }
 
-    public Picker(String mark, List<T> values) {
-        super(mark);
+    public Picker values(T... params) {
+        return values(Lists.newArrayList(params));
+    }
+
+    public Picker values(List<T> values) {
         this.values = values;
-    }
-
-    public Picker(String mark, T... values) {
-        super(mark);
-        this.values = Lists.newArrayList(values);
+        return this;
     }
 
     @Override
     public T next() {
+        if (this.values.isEmpty()) {
+            return null;
+        }
         int index = getRandom().nextInt(values.size());
-        return this.values.get(index);
-    }
-
-    public static Picker of(String mark, List<String> values) {
-        return new Picker(mark, Lists.newArrayList(values));
+        Object item = this.values.get(index);
+        if (item instanceof Randomable) {
+            return (T) ((Randomable) item).next();
+        }
+        return (T) item;
     }
 }

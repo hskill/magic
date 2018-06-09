@@ -1,34 +1,24 @@
 package info.ideatower.magic.random.web;
 
 import info.ideatower.magic.random.AbstractRandomValue;
-import info.ideatower.magic.random.color.HexColor;
-import info.ideatower.magic.random.text.Letter;
+import info.ideatower.magic.random.value.Int;
 
 import java.text.MessageFormat;
 
 /**
- * 图片地址
+ * 图片
  *
- * https://dummyimage.com
+ * 来源 https://placeimg.com/
  */
 public class Image extends AbstractRandomValue<String> {
 
-    public static final int JPG = 1;
-    public static final int PNG = 2;
-    public static final int GIF = 3;
-
-    private final HexColor color;
-    private final Letter letter;
-
+    private Int integer;
     private int width = Integer.MIN_VALUE;
     private int height = Integer.MIN_VALUE;
-    private int format = 1; // 1. jpg 2. png 3. gif
-    private String ratio;
 
     public Image(String mark) {
         super(mark);
-        this.color = new HexColor(mark);
-        this.letter = new Letter(mark, true);
+        this.integer = new Int(mark).between(200, 600);
     }
 
     public Image width(int width) {
@@ -41,60 +31,21 @@ public class Image extends AbstractRandomValue<String> {
         return this;
     }
 
-    public Image format(int format) {
-        this.format = format;
-        return this;
-    }
-
-    public Image ratio(int widthRatio, int heightRatio) {
-        this.ratio = widthRatio + ":" + heightRatio;
+    public Image between(int min, int max) {
+        this.integer = new Int(this.mark).between(min, max);
         return this;
     }
 
     @Override
     public String next() {
-        return MessageFormat.format("https://dummyimage.com/{0}/{1}/{2}.{3}&text={4}",
-                getSize(),
-                this.color.next().substring(1),
-                this.color.next().substring(1),
-                getFormatStr(),
-                this.letter.next());
-    }
-
-    private String getFormatStr() {
-        if (this.format == PNG) {
-            return "png";
-        }
-        else if (this.format == GIF) {
-            return "gif";
-        }
-        else {
-            return "jpg";
-        }
+        return MessageFormat.format("https://placeimg.com/{0}/any", getSize());
     }
 
     public String getSize() {
-        if (this.height == Integer.MIN_VALUE && this.width != Integer.MIN_VALUE) {
-
-            if (this.ratio != null) {
-                return this.width + "x" + this.ratio;
-            }
-
-            return String.valueOf(this.width);
-        }
-        else if (this.height != Integer.MIN_VALUE && this.width == Integer.MIN_VALUE) {
-
-            if (this.ratio != null) {
-                return this.ratio + "x" + this.height;
-            }
-            return String.valueOf(this.height);
-        }
-        else if (this.width == Integer.MIN_VALUE && this.height == Integer.MIN_VALUE) {
-            // default value
-            return "200";
-        }
-        else {
-            return this.width + "x" + this.height;
-        }
+        int h = 0;
+        int w = 0;
+        h = this.height == Integer.MIN_VALUE ?  this.integer.next() : this.height;
+        w = this.width == Integer.MIN_VALUE ? this.integer.next() : this.width;
+        return w + "/" + h;
     }
 }

@@ -3,11 +3,11 @@ package info.ideatower.magic.random.web;
 import info.ideatower.magic.Magic;
 import org.junit.Test;
 
-public class EmailTest {
+public class UrlTest {
 
     @Test
     public void next() {
 
-        Magic.schema("test", new Email("email")).asText().size(10).template("${email}").toPrint();
+        Magic.schema("test", new Url("url")).asText().template("${url}").toPrint();
     }
 }
