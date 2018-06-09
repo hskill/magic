@@ -3,63 +3,83 @@ package info.ideatower.magic;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import info.ideatower.magic.random.AbstractRandomValue;
 import info.ideatower.magic.random.value.Picker;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
- * 元数据
+ * 总体随机数据域
  */
 public class Schema {
 
-    private final Map<String, Randomable> container;
-    private final Map<String, Set<Object>> yielded;
+    private final Map<String, RecordRandomableProxy> container;
 
     public Schema() {
         this.container = Maps.newHashMap();
-        this.yielded = Maps.newHashMap();
     }
 
+    /**
+     * 增加随机数据域
+     * @param able
+     */
     public void add(Randomable able) {
-        this.container.put(able.getMark(), new RandomableProxy(able, this.yielded));
+        this.container.put(able.getMark(), new RecordRandomableProxy(able));
     }
 
+    /**
+     * 获取所有随机数据域
+     * @return
+     */
     public List<Randomable> getRandomable() {
         return Lists.newArrayList(this.container.values());
     }
 
     /**
      * 对指定名称，获取该属性已经产生过的数据
-     * @param mark 名称
-     * @return Set<Object> 集合（无重复元素）
+     * @param fromMark 名称
+     * @return Randomable
      */
-    public Set<Object> getProduced(String mark) {
-        return this.yielded.getOrDefault(mark, Collections.EMPTY_SET);
+    public Randomable getProduced(String fromMark, String newMark) {
+        return new MemoryRandomable(newMark, this.container.get(fromMark));
     }
 
     /**
-     * 对指定名称，获取该属性已经产生过的数据
-     * @param newMark 新创建的属性名称
-     * @param fromMark 来自哪一个属性名称
-     * @return
+     * 用来从已生成记录中随机获取数据
      */
-    public Picker<Object> getProduced(String newMark, String fromMark) {
-        return new Picker(newMark, Lists.newArrayList(getProduced(fromMark)));
+    private class MemoryRandomable implements Randomable {
+
+        private final RecordRandomableProxy proxy;
+        private final String mark;
+        private final Picker picker;
+
+        public MemoryRandomable(String mark, RecordRandomableProxy proxy) {
+            this.mark = mark;
+            this.proxy = proxy;
+            this.picker = new Picker(this.mark);
+        }
+
+        @Override
+        public String getMark() {
+            return this.mark;
+        }
+
+        @Override
+        public Object next() {
+             return picker.values(proxy.yielded.toArray()).next();
+        }
     }
 
     /**
-     * 通过代理类，在获取值后，进行存储
+     * 通过代理类，在获取值后，进行生成值存储
      */
-    private class RandomableProxy implements Randomable {
-        private final Map<String, Set<Object>> yielded;
+    private class RecordRandomableProxy implements Randomable {
+        private final Set<Object> yielded;
         private final Randomable able;
 
-        public RandomableProxy(Randomable able, Map<String, Set<Object>> yielded) {
+        public RecordRandomableProxy(Randomable able) {
             this.able = able;
-            this.yielded = yielded;
+            this.yielded = Sets.newHashSet();
         }
 
         @Override
@@ -70,13 +90,7 @@ public class Schema {
         @Override
         public Object next() {
             Object value = this.able.next();
-            if (this.yielded.containsKey(this.able.getMark())) {
-                this.yielded.get(this.able.getMark()).add(value);
-            }
-            else {
-                Set<Object> values = Sets.newHashSet(value);
-                this.yielded.put(this.able.getMark(), values);
-            }
+            this.yielded.add(value);
             return value;
         }
     }
