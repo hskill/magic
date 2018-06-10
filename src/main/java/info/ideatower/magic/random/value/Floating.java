@@ -4,20 +4,27 @@ import info.ideatower.magic.random.AbstractRandomValue;
 
 public class Floating extends AbstractRandomValue<Float> {
 
-    private final float min;
-    private final float max;
+    private float min = Float.MIN_VALUE;
+    private float max = Float.MAX_VALUE;
 
     public Floating(String mark) {
-        this(mark, Float.MIN_VALUE, Float.MAX_VALUE);
+        super(mark);
     }
 
-    public Floating(String mark, float min) {
-        this(mark, min, Float.MAX_VALUE);
+    public Floating min(float min) {
+        this.min = min;
+        return this;
     }
 
-    public Floating(String mark, float min, float max) {
+    public Floating max(float max) {
+        this.max = max;
+        return this;
+    }
+
+    public Floating between(float min, float max) {
         this.min = min;
         this.max = max;
+        return this;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package info.ideatower.magic.result;
 
+import info.ideatower.magic.Schema;
 import info.ideatower.magic.util.TemplateRenderer;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -22,7 +23,7 @@ public class Jdbc {
 
     private static final String MYSQL_DRIVER = "com.mysql.cj.jdbc.Driver";
 
-    private final Result result;
+    private final Schema schema;
     private final TemplateRenderer renderer;
 
     private String host;
@@ -32,8 +33,8 @@ public class Jdbc {
     private String table;
     private String template;
 
-    public Jdbc(Result result) {
-        this.result = result;
+    public Jdbc(Schema schema) {
+        this.schema = schema;
         this.renderer = new TemplateRenderer();
     }
 
@@ -72,7 +73,7 @@ public class Jdbc {
         val conn = getConnection(this.host, this.user, this.password, this.db);
         val query = new QueryRunner();
 
-        this.result.getDatas().forEach((Map<String, Object> item) -> {
+        this.schema.next().forEach((Map<String, Object> item) -> {
             try {
                 val sql = getSql(item);
                 query.insert(conn, sql, new ResultSetHandler<Object>() {
@@ -82,7 +83,6 @@ public class Jdbc {
                         return null;
                     }
                 });
-
             }
             catch (SQLException e) {
                 throw new RuntimeException(e);

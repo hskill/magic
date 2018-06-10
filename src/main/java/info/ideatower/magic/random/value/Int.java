@@ -32,6 +32,6 @@ public class Int extends AbstractRandomValue<Integer> {
 
     @Override
     public Integer next() {
-        return min + getRandom().nextInt(max - min);
+        return min + getRandom().nextInt(max - (min < 0 ? 0 : min));
     }
 }

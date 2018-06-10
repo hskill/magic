@@ -5,7 +5,16 @@ package info.ideatower.magic;
  */
 public interface Randomable<T> {
 
+    /**
+     * 获取数据名称标识
+     * @return 名称标识
+     */
     String getMark();
 
+    /**
+     * 产生数据
+     * @return
+     */
     T next();
+
 }

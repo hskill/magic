@@ -3,11 +3,13 @@ package info.ideatower.magic.random.value;
 import com.google.common.collect.Lists;
 import info.ideatower.magic.Randomable;
 import info.ideatower.magic.random.AbstractRandomValue;
-import lombok.Data;
 
 import java.util.List;
 
-@Data
+/**
+ * 随机挑选已有列表数据，列表数据可以使用 Randomable
+ * @param <T>
+ */
 public class Picker<T> extends AbstractRandomValue<T> {
 
     private List<T> values = Lists.newArrayList();

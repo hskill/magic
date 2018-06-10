@@ -8,20 +8,35 @@ import info.ideatower.magic.random.AbstractRandomValue;
 public class Increment extends AbstractRandomValue<Integer> {
 
     private int current;
-    private int step;
+    private int step = 1;
+    private int stop = Integer.MAX_VALUE;
+    private int start = 0;
 
     public Increment(String mark) {
-        this(mark, 1);
+        super(mark);
     }
 
-    public Increment(String mark, int step) {
-        super(mark);
-        this.current = 1;
-        this.step = step;
+    public Increment start(int start) {
+        this.start = this.current= start;
+        return this;
     }
+
+    public Increment stop(int stop) {
+        this.stop = stop;
+        return this;
+    }
+
+    public Increment step(int step) {
+        this.step = step;
+        return this;
+    }
+
 
     @Override
     public Integer next() {
+        if (this.current == this.stop) {
+            this.current = this.start;
+        }
         int result = this.current;
         this.current += this.step;
         return result;

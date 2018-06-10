@@ -26,7 +26,6 @@ public class Char extends AbstractRandomValue<Character> {
         this.pool = pool;
         return this;
     }
-
     @Override
     public Character next() {
         int index = getRandom().nextInt(this.pool.length);

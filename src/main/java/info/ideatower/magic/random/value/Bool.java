@@ -9,15 +9,15 @@ import info.ideatower.magic.random.AbstractRandomValue;
  */
 public class Bool extends AbstractRandomValue<Boolean> {
 
-    private int likelihood;
+    private int likelihood = 50;
 
     public Bool(String mark) {
-        this(mark, 50);
+        super(mark);
     }
 
-    public Bool(String mark, int likelihood) {
-        super(mark);
+    public Bool likelihood(int likelihood) {
         this.likelihood = likelihood % 100;
+        return this;
     }
 
     @Override

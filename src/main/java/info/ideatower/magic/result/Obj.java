@@ -1,35 +1,33 @@
 package info.ideatower.magic.result;
 
+import com.google.common.collect.Lists;
+import info.ideatower.magic.Schema;
+import lombok.SneakyThrows;
+import org.apache.commons.beanutils.BeanUtils;
+
 import java.util.List;
+import java.util.Map;
 
 /**
  * 生成结果转为对象
  */
 public class Obj {
 
-    private final Result result;
+    private final Schema schema;
 
-    private int size = 100;
-    private Class<?> target;
-
-    public Obj(Result result) {
-        this.result = result;
+    public Obj(Schema schema) {
+        this.schema = schema;
     }
 
-    public Obj size(int size) {
-        this.result.size(size);
-        return this;
-    }
-
-    public Obj target(Class<?> target) {
-        this.target = target;
-        return this;
-    }
-
-    public <T> List<T> toList() {
-        if (this.target != null) {
-            return (List<T>) this.result.getObjects(this.target);
+    @SneakyThrows
+    public <T> List<T> toList(Class<T> target) {
+        List<T> result = Lists.newArrayList();
+        for (Map<String, Object> item : this.schema.next()) {
+            T bean = (T) target.newInstance();
+            BeanUtils.populate(bean, item);
+            result.add(bean);
         }
-        return (List<T>) this.result.getDatas();
+        return result;
     }
+
 }

@@ -1,6 +1,7 @@
 package info.ideatower.magic.result;
 
 import com.google.common.collect.Lists;
+import info.ideatower.magic.Schema;
 import info.ideatower.magic.util.TemplateRenderer;
 import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
@@ -19,12 +20,12 @@ public class Text {
 
     private final TemplateRenderer renderer;
 
-    private Result result;
+    private Schema schema;
     private String template;
     private String seperator;
 
-    public Text(Result result) {
-        this.result = result;
+    public Text(Schema schema) {
+        this.schema = schema;
         this.renderer = new TemplateRenderer();
         this.seperator = System.getProperty("line.separator");
     }
@@ -39,14 +40,9 @@ public class Text {
         return this;
     }
 
-    public Text size(int size) {
-        this.result.size(size);
-        return this;
-    }
-
     public List<String> toList() {
         List<String> strList = Lists.newArrayList();
-        List<Map<String, Object>> datas = result.getDatas();
+        List<Map<String, Object>> datas = schema.next();
         if (!datas.isEmpty() && StringUtils.isNotBlank(this.template)) {
             for (Map<String, Object> item : datas) {
                 String rendered = renderer.render(this.template, item);

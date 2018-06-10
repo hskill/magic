@@ -1,6 +1,7 @@
 package info.ideatower.magic.result;
 
 import com.alibaba.fastjson.JSON;
+import info.ideatower.magic.Schema;
 import lombok.SneakyThrows;
 
 import java.io.File;
@@ -13,17 +14,14 @@ import java.io.Writer;
  */
 public class Json {
 
-    private Result result;
+    private Schema schema;
     private Class<?> target;
     private String file;
+    private Obj obj;
 
-    public Json(Result result) {
-        this.result = result;
-    }
-
-    public Json size(int size) {
-        this.result.size(size);
-        return this;
+    public Json(Schema schema) {
+        this.schema = schema;
+        this.obj = new Obj(schema);
     }
 
     public Json file(String file) {
@@ -42,10 +40,10 @@ public class Json {
      */
     public String toStr() {
         if (target != null) {
-            return JSON.toJSONString(result.getObjects(this.target));
+            return JSON.toJSONString(this.obj.toList(target));
         }
         else {
-            return JSON.toJSONString(result.getDatas());
+            return JSON.toJSONString(this.schema.next());
         }
     }
 
