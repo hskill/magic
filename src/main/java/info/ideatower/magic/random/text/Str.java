@@ -1,6 +1,8 @@
 package info.ideatower.magic.random.text;
 
 import info.ideatower.magic.random.AbstractRandomValue;
+import info.ideatower.magic.random.value.Int;
+import info.ideatower.magic.util.Repeater;
 import org.apache.commons.lang3.RandomStringUtils;
 
 /**
@@ -10,13 +12,15 @@ public class Str extends AbstractRandomValue<String> {
 
     public static final String STRS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
 
-    private String pool = STRS;
+    private final Char ch;
+    private final Int integer;
+
     private int count;
-    private int min = 10;
-    private int max = 20;
 
     public Str(String mark) {
         super(mark);
+        this.ch = new Char(mark).pool(STRS);
+        this.integer = new Int(mark).between(10, 20);
     }
 
     public Str count(int count) {
@@ -24,28 +28,33 @@ public class Str extends AbstractRandomValue<String> {
         return this;
     }
 
+    public Str count(int min, int max) {
+        this.integer.between(min, max);
+        return this;
+    }
+
     public Str min(int min) {
-        this.min = min;
+        this.integer.min(min);
         return this;
     }
 
     public Str max(int max) {
-        this.max = max;
+        this.integer.max(max);
         return this;
     }
 
     public Str pool(String pool) {
-        this.pool = pool;
+        this.ch.pool(pool);
         return this;
     }
 
     @Override
     public String next() {
         if (this.count > 0) {
-            return RandomStringUtils.random(this.count, this.pool);
+            return Repeater.str(this.ch, count);
         }
         else {
-            return RandomStringUtils.random(this.min + getRandom().nextInt(this.max - this.min), pool);
+            return Repeater.str(this.ch, this.integer.next());
         }
 
     }
