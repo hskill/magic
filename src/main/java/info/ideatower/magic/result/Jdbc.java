@@ -1,6 +1,8 @@
 package info.ideatower.magic.result;
 
 import info.ideatower.magic.Schema;
+import info.ideatower.magic.schema.OnlySchema;
+import info.ideatower.magic.schema.SerialSchema;
 import info.ideatower.magic.util.TemplateRenderer;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -14,6 +16,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -70,35 +73,38 @@ public class Jdbc {
 
     @SneakyThrows
     public void to() {
+        if (schema instanceof SerialSchema) {
+            ((SerialSchema) schema).next().forEach((item) -> {
+                handleData(item);
+            });
+        }
+        else if (schema instanceof OnlySchema) {
+            handleData(((OnlySchema) schema).next());
+        }
+    }
+
+    private void handleData(Map<String, Object> item) {
         val conn = getConnection(this.host, this.user, this.password, this.db);
         val query = new QueryRunner();
+        try {
+            val sql = getSql(item);
+            query.insert(conn, sql, (rs) -> {return null;});
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
-        this.schema.next().forEach((Map<String, Object> item) -> {
-            try {
-                val sql = getSql(item);
-                query.insert(conn, sql, new ResultSetHandler<Object>() {
-
-                    @Override
-                    public Object handle(ResultSet rs) throws SQLException {
-                        return null;
-                    }
-                });
-            }
-            catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        });
         DbUtils.closeQuietly(conn);
     }
 
-    private String getSql(Map<String, Object> item) {
+    private String getSql(Object item) {
+        Map<String, Object> itemMap = (Map<String, Object>) item;
         if (StringUtils.isNotBlank(this.template)) {
             return renderer.render(this.template, item);
         }
 
         val sql = new StringBuilder();
         sql.append("INSERT INTO `").append(this.table).append("`(");
-        for (String key : item.keySet()) {
+        for (String key : itemMap.keySet()) {
             sql.append("`");
             sql.append(key);
             sql.append("`,");
@@ -106,10 +112,8 @@ public class Jdbc {
         sql.deleteCharAt(sql.length() - 1);
         sql.append(") VALUES(");
 
-        for (String key : item.keySet()) {
-            Object value = item.get(key);
-
-            sql.append("'").append(value).append("'");
+        for (Map.Entry<String, Object> entry : itemMap.entrySet()) {
+            sql.append("'").append(entry.getValue()).append("'");
             sql.append(",");
         }
         sql.deleteCharAt(sql.length() - 1);

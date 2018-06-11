@@ -2,6 +2,8 @@ package info.ideatower.magic.result;
 
 import com.google.common.collect.Lists;
 import info.ideatower.magic.Schema;
+import info.ideatower.magic.schema.OnlySchema;
+import info.ideatower.magic.schema.SerialSchema;
 import info.ideatower.magic.util.TemplateRenderer;
 import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
@@ -40,18 +42,6 @@ public class Text {
         return this;
     }
 
-    public List<String> toList() {
-        List<String> strList = Lists.newArrayList();
-        List<Map<String, Object>> datas = schema.next();
-        if (!datas.isEmpty() && StringUtils.isNotBlank(this.template)) {
-            for (Map<String, Object> item : datas) {
-                String rendered = renderer.render(this.template, item);
-                strList.add(rendered);
-            }
-        }
-        return strList;
-    }
-
     @SneakyThrows
     public void toFile(String filename) {
         List<String> all = toList();
@@ -75,5 +65,48 @@ public class Text {
 
     public void toPrint() {
         toWriter(new OutputStreamWriter(System.out));
+    }
+
+    /**
+     * 返回字符串列表
+     * @return
+     */
+    public List<String> toList() {
+        List<String> strList = Lists.newArrayList();
+        if (schema instanceof SerialSchema) {
+            ((SerialSchema) schema).next().forEach((item) -> {
+                String rendered = handleData(item);
+                strList.add(rendered);
+            });
+        }
+        else if (schema instanceof OnlySchema) {
+            String rendered = handleData(((OnlySchema) schema).next());
+            strList.add(rendered);
+        }
+
+        return strList;
+    }
+
+
+    /**
+     * 返回单个字符串
+     * @return
+     */
+    public String to() {
+        String str = "";
+        if (schema instanceof SerialSchema) {
+            List<Map<String, Object>> dataList = ((SerialSchema) schema).next();
+            str = handleData(dataList.get(0));
+        }
+        else if (schema instanceof OnlySchema) {
+            str = handleData(((OnlySchema) schema).next());
+        }
+
+        return str;
+    }
+
+    private String handleData(Map<String, Object> item) {
+        String rendered = renderer.render(this.template, item);
+        return rendered;
     }
 }

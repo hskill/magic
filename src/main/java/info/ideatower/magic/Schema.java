@@ -8,6 +8,8 @@ import info.ideatower.magic.result.Jdbc;
 import info.ideatower.magic.result.Json;
 import info.ideatower.magic.result.Obj;
 import info.ideatower.magic.result.Text;
+import info.ideatower.magic.schema.OnlySchema;
+import info.ideatower.magic.schema.SerialSchema;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.List;
@@ -17,7 +19,7 @@ import java.util.Set;
 /**
  * 总体随机数据域
  */
-public class Schema implements Randomable<List<Map<String, Object>>> {
+public abstract class Schema<T> implements Randomable<T> {
 
     public static final int DEFAULT_PRODUCE_COUNT = 100;
 
@@ -26,16 +28,16 @@ public class Schema implements Randomable<List<Map<String, Object>>> {
 
     /**
      * 设置数据属性
-     * @param name 名称，唯一标识
+     * @param mark 名称，唯一标识
      * @param ables 随机生成域
      * @return
      */
-    public static Schema of(String name, Randomable... ables) {
-        Schema schema = new Schema(name);
+    public static SerialSchema serial(String mark, Randomable... ables) {
+        SerialSchema schema = new SerialSchema(mark);
         for (Randomable able : ables) {
             schema.add(able);
         }
-        SCHEMA_MAP.put(name, schema);
+        SCHEMA_MAP.put(mark, schema);
         return schema;
     }
 
@@ -44,8 +46,13 @@ public class Schema implements Randomable<List<Map<String, Object>>> {
      * @param ables 随机生成域
      * @return
      */
-    public static Schema of(Randomable... ables) {
-        return of(RandomStringUtils.random(6, "abcdefghijklmnopqrstuvwxyz"), ables);
+    public static OnlySchema only(String mark, Randomable... ables) {
+        OnlySchema schema = new OnlySchema(mark);
+        for (Randomable able : ables) {
+            schema.add(able);
+        }
+        SCHEMA_MAP.put(mark, schema);
+        return schema;
     }
 
     /**
@@ -53,7 +60,7 @@ public class Schema implements Randomable<List<Map<String, Object>>> {
      * @param name 指定schema名称
      * @return
      */
-    public static Schema getSchema(String name) {
+    public static Schema get(String name) {
         if (!SCHEMA_MAP.containsKey(name)) {
             throw new RuntimeException("cannot find schema name: " + name);
         }
@@ -68,25 +75,16 @@ public class Schema implements Randomable<List<Map<String, Object>>> {
         return Lists.newArrayList(SCHEMA_MAP.values());
     }
 
-    private final String mark;
-    private final Map<String, RecordRandomableProxy> container;
-    private int count = DEFAULT_PRODUCE_COUNT;
+    protected final String mark;
+    protected final Map<String, RecordRandomableProxy> container;
 
-    public Schema(String mark) {
+    protected Schema(String mark) {
         this.container = Maps.newHashMap();
         this.mark = mark;
     }
 
     public String getMark() {
         return this.mark;
-    }
-
-    public Schema count(int count) {
-        if (count < 1) {
-            return this;
-        }
-        this.count = count;
-        return this;
     }
 
     /**
@@ -97,24 +95,13 @@ public class Schema implements Randomable<List<Map<String, Object>>> {
         this.container.put(able.getMark(), new RecordRandomableProxy(able));
     }
 
+
     /**
-     * 产生数据
-     * @return 数据列表
+     * 抽象方法
+     * @return
      */
-    @Override
-    public List<Map<String, Object>> next() {
-        List<Map<String, Object>> result = Lists.newArrayList();
-        if (!this.container.isEmpty()) {
-            for (int i = 0; i < this.count; i++) {
-                Map<String, Object> item = Maps.newHashMap();
-                for (Randomable able : this.container.values()) {
-                    item.put(able.getMark(), able.next());
-                }
-                result.add(item);
-            }
-        }
-        return result;
-    }
+    public abstract T next();
+
 
     /**
      * 生成为对象
