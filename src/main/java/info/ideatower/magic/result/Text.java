@@ -7,7 +7,6 @@ import info.ideatower.magic.schema.SerialSchema;
 import info.ideatower.magic.util.TemplateRenderer;
 import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.OutputStreamWriter;
@@ -85,24 +84,6 @@ public class Text {
         }
 
         return strList;
-    }
-
-
-    /**
-     * 返回单个字符串
-     * @return
-     */
-    public String to() {
-        String str = "";
-        if (schema instanceof SerialSchema) {
-            List<Map<String, Object>> dataList = ((SerialSchema) schema).next();
-            str = handleData(dataList.get(0));
-        }
-        else if (schema instanceof OnlySchema) {
-            str = handleData(((OnlySchema) schema).next());
-        }
-
-        return str;
     }
 
     private String handleData(Map<String, Object> item) {

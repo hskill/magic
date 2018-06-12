@@ -73,7 +73,7 @@ public class ColorImage extends AbstractRandomValue<String> {
         }
     }
 
-    public String getSize() {
+    private String getSize() {
         if (this.height == Integer.MIN_VALUE && this.width != Integer.MIN_VALUE) {
 
             if (this.ratio != null) {

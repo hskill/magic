@@ -2,6 +2,8 @@ package info.ideatower.magic.result;
 
 import com.alibaba.fastjson.JSON;
 import info.ideatower.magic.Schema;
+import info.ideatower.magic.schema.OnlySchema;
+import info.ideatower.magic.schema.SerialSchema;
 import lombok.SneakyThrows;
 
 import java.io.File;
@@ -16,17 +18,11 @@ public class Json {
 
     private Schema schema;
     private Class<?> target;
-    private String file;
     private Obj obj;
 
     public Json(Schema schema) {
         this.schema = schema;
         this.obj = new Obj(schema);
-    }
-
-    public Json file(String file) {
-        this.file = file;
-        return this;
     }
 
     public Json target(Class<?> target) {
@@ -39,12 +35,19 @@ public class Json {
      * @return
      */
     public String toStr() {
+        String json = "";
         if (target != null) {
-            return JSON.toJSONString(this.obj.toList(target));
+            if (schema instanceof SerialSchema) {
+                json = JSON.toJSONString(this.obj.toList(target));
+            }
+            else if (schema instanceof OnlySchema) {
+                json = JSON.toJSONString(this.obj.to(target));
+            }
         }
         else {
-            return JSON.toJSONString(this.schema.next());
+            json = JSON.toJSONString(this.schema.next());
         }
+        return json;
     }
 
     /**
@@ -69,8 +72,8 @@ public class Json {
      * 通过文件存储json
      */
     @SneakyThrows
-    public void toFile() {
-        FileWriter writer = new FileWriter(new File(this.file));
+    public void toFile(String filename) {
+        FileWriter writer = new FileWriter(new File(filename));
         toWriter(writer);
         writer.close();
     }

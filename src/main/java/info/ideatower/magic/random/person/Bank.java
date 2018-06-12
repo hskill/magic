@@ -20,7 +20,6 @@ public class Bank extends AbstractRandomValue<String> {
 
     public Bank(String mark) {
         super(mark);
-
         this.integer = new Int(mark).between(0, 9 + 1);
     }
 

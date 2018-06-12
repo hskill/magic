@@ -2,6 +2,9 @@ package info.ideatower.magic.random.value;
 
 import info.ideatower.magic.random.AbstractRandomValue;
 
+/**
+ * float 数值
+ */
 public class Floating extends AbstractRandomValue<Float> {
 
     private float min = Float.MIN_VALUE;

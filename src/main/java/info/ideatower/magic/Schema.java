@@ -10,7 +10,6 @@ import info.ideatower.magic.result.Obj;
 import info.ideatower.magic.result.Text;
 import info.ideatower.magic.schema.OnlySchema;
 import info.ideatower.magic.schema.SerialSchema;
-import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -35,7 +34,7 @@ public abstract class Schema<T> implements Randomable<T> {
     public static SerialSchema serial(String mark, Randomable... ables) {
         SerialSchema schema = new SerialSchema(mark);
         for (Randomable able : ables) {
-            schema.add(able);
+            schema.container.put(able.getMark(), new RecordRandomableProxy(able));
         }
         SCHEMA_MAP.put(mark, schema);
         return schema;
@@ -49,7 +48,7 @@ public abstract class Schema<T> implements Randomable<T> {
     public static OnlySchema only(String mark, Randomable... ables) {
         OnlySchema schema = new OnlySchema(mark);
         for (Randomable able : ables) {
-            schema.add(able);
+            schema.container.put(able.getMark(), new RecordRandomableProxy(able));
         }
         SCHEMA_MAP.put(mark, schema);
         return schema;
@@ -57,14 +56,14 @@ public abstract class Schema<T> implements Randomable<T> {
 
     /**
      * 通过名称获取 schema
-     * @param name 指定schema名称
+     * @param mark 指定schema名称
      * @return
      */
-    public static Schema get(String name) {
-        if (!SCHEMA_MAP.containsKey(name)) {
-            throw new RuntimeException("cannot find schema name: " + name);
+    public static Schema get(String mark) {
+        if (!SCHEMA_MAP.containsKey(mark)) {
+            throw new RuntimeException("cannot find schema name: " + mark);
         }
-        return SCHEMA_MAP.get(name);
+        return SCHEMA_MAP.get(mark);
     }
 
     /**
@@ -86,15 +85,6 @@ public abstract class Schema<T> implements Randomable<T> {
     public String getMark() {
         return this.mark;
     }
-
-    /**
-     * 增加随机数据域
-     * @param able
-     */
-    public void add(Randomable able) {
-        this.container.put(able.getMark(), new RecordRandomableProxy(able));
-    }
-
 
     /**
      * 抽象方法
@@ -147,7 +137,7 @@ public abstract class Schema<T> implements Randomable<T> {
     /**
      * 用来从已生成记录中随机获取数据
      */
-    private class MemoryRandomable implements Randomable {
+    protected static class MemoryRandomable implements Randomable {
 
         private final RecordRandomableProxy proxy;
         private final String mark;
@@ -173,7 +163,7 @@ public abstract class Schema<T> implements Randomable<T> {
     /**
      * 通过代理类，在获取值后，进行生成值存储
      */
-    private class RecordRandomableProxy implements Randomable {
+    protected static class RecordRandomableProxy implements Randomable {
         private final Set<Object> yielded;
         private final Randomable able;
 

@@ -3,7 +3,6 @@ package info.ideatower.magic.random.text;
 import info.ideatower.magic.random.AbstractRandomValue;
 import info.ideatower.magic.random.value.Int;
 import info.ideatower.magic.util.Repeater;
-import org.apache.commons.lang3.RandomStringUtils;
 
 /**
  * 生成随机字符串，可以指定长度，或长度范围，以及指定字符池
@@ -44,6 +43,11 @@ public class Str extends AbstractRandomValue<String> {
     }
 
     public Str pool(String pool) {
+        this.ch.pool(pool);
+        return this;
+    }
+
+    public Str pool(char... pool) {
         this.ch.pool(pool);
         return this;
     }

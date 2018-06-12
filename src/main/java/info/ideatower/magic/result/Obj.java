@@ -6,9 +6,6 @@ import info.ideatower.magic.schema.OnlySchema;
 import info.ideatower.magic.schema.SerialSchema;
 import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.beanutils.PropertyUtilsBean;
-import org.apache.commons.lang3.ClassUtils;
 
 import java.util.List;
 import java.util.Map;

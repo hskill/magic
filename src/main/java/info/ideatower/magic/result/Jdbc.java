@@ -8,15 +8,12 @@ import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
-import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.MessageFormat;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,6 +26,7 @@ public class Jdbc {
     private final Schema schema;
     private final TemplateRenderer renderer;
 
+    private String url;
     private String host;
     private String user;
     private String password;
@@ -43,6 +41,11 @@ public class Jdbc {
 
     public Jdbc template(String template) {
         this.template = template;
+        return this;
+    }
+
+    public Jdbc url(String host) {
+        this.url = url;
         return this;
     }
 

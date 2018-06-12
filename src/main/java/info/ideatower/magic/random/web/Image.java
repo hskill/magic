@@ -41,7 +41,7 @@ public class Image extends AbstractRandomValue<String> {
         return MessageFormat.format("https://placeimg.com/{0}/any", getSize());
     }
 
-    public String getSize() {
+    private String getSize() {
         int h = 0;
         int w = 0;
         h = this.height == Integer.MIN_VALUE ?  this.integer.next() : this.height;

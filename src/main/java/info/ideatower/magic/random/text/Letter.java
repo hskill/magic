@@ -7,13 +7,15 @@ public class Letter extends Char {
 
     public static final String LETTERS = "abcdefghijklmnopqrstuvwxyz";
 
-    private boolean upper = false;
-
     public Letter(String mark) {
         super(mark);
         this.pool(LETTERS.toCharArray());
     }
 
+    /**
+     * 设定大写
+     * @return
+     */
     public Letter upper() {
         this.pool(LETTERS.toUpperCase().toCharArray());
         return this;

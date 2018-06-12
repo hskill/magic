@@ -9,7 +9,7 @@ import info.ideatower.magic.random.AbstractRandomValue;
  */
 public class Char extends AbstractRandomValue<Character> {
 
-    public static final char[] CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+    public static final char[] CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()".toCharArray();
     private char[] pool;
 
     public Char(String mark) {
